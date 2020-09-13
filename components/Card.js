@@ -4,14 +4,14 @@ import styled from "styled-components";
 const Card = (props) => (
   <Container>
     <Cover>
-      <Image source={require("../assets/background2.jpg")}></Image>
-      <Title>Styled Components</Title>
+      <Image source={props.image}></Image>
+      <Title>{props.title}</Title>
     </Cover>
     <Content>
-      <Logo source={require("../assets/logo-react.png")}></Logo>
+      <Logo source={props.logo}></Logo>
       <Wrapper>
-        <Caption>React Native</Caption>
-        <Subtitle>5 of 12 sections</Subtitle>
+        <Caption>{props.caption}</Caption>
+        <Subtitle>{props.subtitle}</Subtitle>
       </Wrapper>
     </Content>
   </Container>
