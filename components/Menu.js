@@ -3,8 +3,22 @@ import styled from "styled-components";
 import { Animated, TouchableOpacity, Dimensions } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import MenuItem from "./MenuItem";
+import { connect } from "react-redux";
 
 const screenHeight = Dimensions.get("window").height;
+
+function mapStateToProps(state) {
+  return { action: state.action };
+}
+
+function mapDispatchToProps(dispatch) {
+  return {
+    closeMenu: () =>
+      dispatch({
+        type: "CLOSE_MENU",
+      }),
+  };
+}
 
 class Menu extends React.Component {
   state = {
@@ -12,15 +26,24 @@ class Menu extends React.Component {
   };
 
   componentDidMount() {
-    Animated.spring(this.state.top, {
-      toValue: 0,
-    }).start();
+    this.toggleMenu();
+  }
+
+  componentDidUpdate() {
+    this.toggleMenu();
   }
 
   toggleMenu = () => {
-    Animated.spring(this.state.top, {
-      toValue: screenHeight,
-    }).start();
+    if (this.props.action == "openMenu") {
+      Animated.spring(this.state.top, {
+        toValue: 54,
+      }).start();
+    }
+    if (this.props.action == "closeMenu") {
+      Animated.spring(this.state.top, {
+        toValue: screenHeight,
+      }).start();
+    }
   };
   render() {
     return (
@@ -31,7 +54,7 @@ class Menu extends React.Component {
           <Subtitle>Designer</Subtitle>
         </Cover>
         <TouchableOpacity
-          onPress={this.toggleMenu}
+          onPress={this.props.closeMenu}
           style={{
             position: "absolute",
             top: 120,
@@ -60,7 +83,7 @@ class Menu extends React.Component {
   }
 }
 
-export default Menu;
+export default connect(mapStateToProps, mapDispatchToProps)(Menu);
 
 const Image = styled.Image`
   position: absolute;
@@ -75,12 +98,14 @@ const Title = styled.Text`
 `;
 
 const Subtitle = styled.Text`
-  font-size: 13;
+  font-size: 13px;
   color: rgba(255, 255, 255, 0.5);
   margin-top: 8px;
 `;
 
 const Container = styled.View`
+  border-radius: 10px;
+  overflow: hidden;
   position: absolute;
   background: white;
   width: 100%;
